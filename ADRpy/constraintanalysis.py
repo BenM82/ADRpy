@@ -298,6 +298,9 @@ class AircraftConcept:
             # Take-off Constraint
             'groundrun_m': False,  # Flag as not specified
             'rwyelevation_m': 0,  # Assign sea level (h = 0 metres)
+            'groundrunnozzleangle': 0,
+            'takeoffspeedconstant': 0,
+            'takeoffnozzleangle': 0,
             'to_headwind_kts': 0,
             'to_slope_perc': 0,
 
@@ -445,10 +448,15 @@ class AircraftConcept:
         # Take-off Constraint
         self.groundrun_m = brief['groundrun_m']
         self.rwyelevation_m = brief['rwyelevation_m']
+        self.groundrunnozzleangle_deg = brief['groundrunnozzleangle']
+        self.takeoffnozzleangle_deg = brief['takeoffnozzleangle']
+        self.takeoffspeedconstant = brief['takeoffspeedconstant']
         self.to_headwind_kts = brief['to_headwind_kts']
         self.to_slope_perc = brief['to_slope_perc']
         self.to_slope_rad = math.atan(self.to_slope_perc / 100)
         self.to_slope_deg = math.degrees(self.to_slope_rad)
+        self.takeoffnozzleangle_rad = math.radians(self.takeoffnozzleangle_deg)
+        self.groundrunnozzleangle_rad = math.radians(self.groundrunnozzleangle_deg)
 
         # Turn Constraint
         self.turnalt_m = brief['turnalt_m']
@@ -1417,14 +1425,24 @@ class AircraftConcept:
         # Assuming that the lift-off speed is equal to VR, which we estimate at 1.1VS1(T/O)
         density_kgpm3 = self.designatm.airdens_kgpm3(self.rwyelevation_m)
 
-        vs1to_mps = np.sqrt((2 * wingloading_pa) / (density_kgpm3 * self.clmaxto))
+        
 
-        liftoffspeed_mpstas = 1.1 * vs1to_mps
 
-        thrusttoweightreqd = (liftoffspeed_mpstas ** 2) / (
-                2 * constants.g * groundrun_m) + 0.5 * self.cdto / self.clto + 0.5 * self.mu_r
 
+
+        thrusttoweightreqd = ((((self.takeoffspeedconstant**2) * wingloading_pa)/(density_kgpm3 * self.clmaxto * constants.g * groundrun_m)) + (0.5 * self.cdto / self.clto) + (0.5 * self.mu_r)) /(np.cos(self.groundrunnozzleangle_rad) + (self.mu_r * np.sin(self.groundrunnozzleangle_rad)) + (((self.takeoffspeedconstant**2) * wingloading_pa * np.sin(self.takeoffnozzleangle_rad))/(density_kgpm3 * self.clmaxto * constants.g * groundrun_m)))
+        
+        thrustreqd = thrusttoweightreqd*self.weight_n
+        
+        vs1to_mps = np.sqrt((2 * (self.weight_n - thrustreqd*np.sin(self.takeoffnozzleangle_rad)) / self.wingarea_m2)/(density_kgpm3 * self.clmaxto))
+        
+        liftoffspeed_mpstas = self.takeoffspeedconstant * vs1to_mps
+        
+        
         return thrusttoweightreqd, liftoffspeed_mpstas
+        
+    
+
 
     def twrequired_to(self, wingloading_pa, map2sl=True):
         """Calculate the T/W required for take-off for a range of wing loadings
