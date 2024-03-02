@@ -1458,7 +1458,7 @@ class AircraftConcept:
         
 
 
-        ram_drag = 1000*4.44822  #Estimated for M = 0.08, which is approximate average ram drag over a take-off run.
+        ram_drag = 1080*4.44822  #Estimated for M = 1, which is approximate average ram drag over a take-off run.
 
 
 
