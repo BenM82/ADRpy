@@ -1256,7 +1256,7 @@ class AircraftConcept:
         # To be implemented, as 1 + (V/g)*(dV/dh)
         accel_fact = 1.0
         
-        density_ratio = (self.designatm.airdens_kgpm3(co.feet2m(self.climbalt_m))/self.designatm.airdens_kgpm3(0))
+        density_ratio = (self.designatm.airdens_kgpm3(self.climbalt_m)/self.designatm.airdens_kgpm3(0))
         
         ram_drag = (4.44822*13000*mach*density_ratio)
         
