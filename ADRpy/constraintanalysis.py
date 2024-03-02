@@ -1258,8 +1258,8 @@ class AircraftConcept:
         
         density_ratio = (self.designatm.airdens_kgpm3(self.climbalt_m)/self.designatm.airdens_kgpm3(0))
         
-        #ram_drag = (4.44822*13000*mach*density_ratio)
-        ram_drag = 0
+        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
+        
         
         twratio = accel_fact * climbrate_mpstroc / climbspeed_mpstas + (
                 1 / wsclimb_pa) * qclimb_pa * self.cdminclean + (
@@ -1319,7 +1319,7 @@ class AircraftConcept:
 
         density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m)/self.designatm.airdens_kgpm3(0))
         
-        ram_drag = (4.44822*13000*mach*density_ratio)
+        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
         
         twratio = (1 / wscruise_pa) * qcruise_pa * self.cdminclean + (inddragfact / qcruise_pa) * wscruise_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
 
@@ -1388,7 +1388,7 @@ class AircraftConcept:
         
         density_ratio = (self.designatm.airdens_kgpm3(self.servceil_m)/self.designatm.airdens_kgpm3(0))
 
-        ram_drag = (4.44822*13000*mach*density_ratio)
+        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
         
         twratio = climbrate_mpstroc / secclimbspeed_mpstas + (1 / wsservceil_pa) * qservceil_pa * self.cdminclean + (
                 inddragfact / qservceil_pa) * wsservceil_pa + (ram_drag/(self.sec_weight_fraction * self.weight_n))
