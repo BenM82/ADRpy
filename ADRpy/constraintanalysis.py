@@ -292,6 +292,7 @@ class AircraftConcept:
             # Service Ceiling Constraint
             'servceil_m': False,  # Flag as not specified
             'secclimbspd_kias': False,  # Flag as not specified
+            'secclimbrate': 500,
 
             # Stall Constraint
             'vstallclean_kcas': False,  # Flag as not specified
@@ -443,6 +444,7 @@ class AircraftConcept:
         # Service Ceiling Constraint
         self.servceil_m = brief['servceil_m']
         self.secclimbspd_kias = brief['secclimbspd_kias']
+        self.secclimbrate = brief['secclimbrate']
 
         # Stall Constraint
         self.vstallclean_kcas = brief['vstallclean_kcas']
@@ -1379,13 +1381,17 @@ class AircraftConcept:
 
         # Service ceiling typically defined in terms of climb rate (at best climb speed) of
         # dropping to 100feet/min ~ 0.508m/s
-        climbrate_mps = co.fpm2mps(100)
+        climbrate_mps = co.fpm2mps(self.secclimbrate)
 
         # What true climb rate does 100 feet/minute correspond to?
         climbrate_mpstroc = self.designatm.eas2tas(climbrate_mps, self.servceil_m)
+        
+        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0))
 
+        ram_drag = (4.44822*13333*mach*density_ratio)
+        
         twratio = climbrate_mpstroc / secclimbspeed_mpstas + (1 / wsservceil_pa) * qservceil_pa * self.cdminclean + (
-                inddragfact / qservceil_pa) * wsservceil_pa
+                inddragfact / qservceil_pa) * wsservceil_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
 
         if map2sl:
             twratio = twratio / tcorr
