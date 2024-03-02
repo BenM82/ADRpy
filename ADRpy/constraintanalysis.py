@@ -1444,7 +1444,7 @@ class AircraftConcept:
 
         
 
-        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0)
+        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0))
         mach = self.designatm.mach(secclimbspeed_mpstas, self.servceil_m)
         ram_drag = (4.44822*13000*mach*density_ratio)
 
