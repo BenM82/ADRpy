@@ -1256,7 +1256,7 @@ class AircraftConcept:
         # To be implemented, as 1 + (V/g)*(dV/dh)
         accel_fact = 1.0
         
-        density_ratio = (self.designatm.airdens_kgpm3(self.climbalt_m*0.3048)/self.designatm.airdens_kgpm3(0))
+        density_ratio = (self.designatm.airdens_kgpm3(co.feet2m(self.climbalt_m*0.3048))/self.designatm.airdens_kgpm3(0))
         
         ram_drag = (4.44822*13000*mach*density_ratio)
         
@@ -1317,7 +1317,7 @@ class AircraftConcept:
         mach = self.designatm.mach(cruisespeed_mpstas, self.cruisealt_m)
         inddragfact = self.induceddragfact_lesm(wingloading_pa=wingloading_pa, cl_real=cl_cruise, mach_inf=mach)
 
-        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0))
+        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m)/self.designatm.airdens_kgpm3(0))
         
         ram_drag = (4.44822*13000*mach*density_ratio)
         
@@ -1386,12 +1386,12 @@ class AircraftConcept:
         # What true climb rate does 100 feet/minute correspond to?
         climbrate_mpstroc = self.designatm.eas2tas(climbrate_mps, self.servceil_m)
         
-        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0))
+        density_ratio = (self.designatm.airdens_kgpm3(self.servceil_m)/self.designatm.airdens_kgpm3(0))
 
         ram_drag = (4.44822*13000*mach*density_ratio)
         
         twratio = climbrate_mpstroc / secclimbspeed_mpstas + (1 / wsservceil_pa) * qservceil_pa * self.cdminclean + (
-                inddragfact / qservceil_pa) * wsservceil_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
+                inddragfact / qservceil_pa) * wsservceil_pa + (ram_drag/(self.sec_weight_fraction_weight_fraction * self.weight_n))
 
         if map2sl:
             twratio = twratio / tcorr
@@ -1445,10 +1445,11 @@ class AircraftConcept:
         
 
 
+        ram_drag = 1000*4.44822  #Estimated for M = 0.08, which is approximate average ram drag over a take-off run.
 
 
 
-        thrusttoweightreqd = ((((self.takeoffspeedconstant**2) * wingloading_pa)/(density_kgpm3 * self.clmaxto * constants.g * groundrun_m)) + (0.5 * self.cdto / self.clto) + (0.5 * self.mu_r)) /(np.cos(self.groundrunnozzleangle_rad) + (self.mu_r * np.sin(self.groundrunnozzleangle_rad)) + (((self.takeoffspeedconstant**2) * wingloading_pa * np.sin(self.takeoffnozzleangle_rad))/(density_kgpm3 * self.clmaxto * constants.g * groundrun_m)))
+        thrusttoweightreqd = ((((self.takeoffspeedconstant**2) * wingloading_pa)/(density_kgpm3 * self.clmaxto * constants.g * groundrun_m)) + (0.5 * self.cdto / self.clto) + (0.5 * self.mu_r) + (ram_drag/self.weight_n)) /(np.cos(self.groundrunnozzleangle_rad) + (self.mu_r * np.sin(self.groundrunnozzleangle_rad)) + (((self.takeoffspeedconstant**2) * wingloading_pa * np.sin(self.takeoffnozzleangle_rad))/(density_kgpm3 * self.clmaxto * constants.g * groundrun_m)))
         
         thrustreqd = thrusttoweightreqd*self.weight_n
         
