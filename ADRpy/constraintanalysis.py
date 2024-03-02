@@ -1251,10 +1251,15 @@ class AircraftConcept:
 
         # To be implemented, as 1 + (V/g)*(dV/dh)
         accel_fact = 1.0
-
+        
+        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0))
+        
+        ram_drag = (4.44822*13000*mach*density_ratio)
+        
+        
         twratio = accel_fact * climbrate_mpstroc / climbspeed_mpstas + (
                 1 / wsclimb_pa) * qclimb_pa * self.cdminclean + (
-                          inddragfact / qclimb_pa) * wsclimb_pa * cos_sq_theta
+                          inddragfact / qclimb_pa) * wsclimb_pa * cos_sq_theta + (ram_drag/(self.climb_weight_fraction * self.weight_n))
 
         if map2sl:
             twratio = twratio / tcorr
@@ -1313,7 +1318,7 @@ class AircraftConcept:
         ram_drag = (4.44822*13000*mach*density_ratio)
         
         twratio = (1 / wscruise_pa) * qcruise_pa * self.cdminclean + (inddragfact / qcruise_pa) * wscruise_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
-        
+        print(twratio)
 
         if map2sl:
             twratio = twratio / tcorr
