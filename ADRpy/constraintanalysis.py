@@ -1323,6 +1323,13 @@ class AircraftConcept:
         
         twratio = (1 / wscruise_pa) * qcruise_pa * self.cdminclean + (inddragfact / qcruise_pa) * wscruise_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
 
+
+        if self.cruisealt_m > 11000:
+            tcorr = (0.856 + 0.062*self.bpr + (0.16 - 0.23*self.bpr)*mach)*(density_ratio)
+        else:
+            tcorr = (0.856 + 0.062*self.bpr + (0.16 - 0.23*self.bpr)*mach)*(density_ratio**0.8)
+    
+            
         if map2sl:
             twratio = twratio / tcorr
 
@@ -1393,6 +1400,12 @@ class AircraftConcept:
         twratio = climbrate_mpstroc / secclimbspeed_mpstas + (1 / wsservceil_pa) * qservceil_pa * self.cdminclean + (
                 inddragfact / qservceil_pa) * wsservceil_pa + (ram_drag/(self.sec_weight_fraction * self.weight_n))
 
+        if self.climbalt_m > 11000:
+            tcorr = (0.856 + 0.062*self.bpr + (0.16 - 0.23*self.bpr)*mach)*(density_ratio)
+        else:
+            tcorr = (0.856 + 0.062*self.bpr + (0.16 - 0.23*self.bpr)*mach)*(density_ratio**0.8)
+        
+        
         if map2sl:
             twratio = twratio / tcorr
 
