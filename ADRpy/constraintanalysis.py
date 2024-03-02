@@ -1258,8 +1258,8 @@ class AircraftConcept:
         
         density_ratio = (self.designatm.airdens_kgpm3(self.climbalt_m)/self.designatm.airdens_kgpm3(0))
         
-        ram_drag = (4.44822*13000*mach*density_ratio)
-        
+        #ram_drag = (4.44822*13000*mach*density_ratio)
+        ram_drag = 0
         
         twratio = accel_fact * climbrate_mpstroc / climbspeed_mpstas + (
                 1 / wsclimb_pa) * qclimb_pa * self.cdminclean + (
