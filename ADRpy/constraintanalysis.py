@@ -1308,7 +1308,12 @@ class AircraftConcept:
         mach = self.designatm.mach(cruisespeed_mpstas, self.cruisealt_m)
         inddragfact = self.induceddragfact_lesm(wingloading_pa=wingloading_pa, cl_real=cl_cruise, mach_inf=mach)
 
-        twratio = (1 / wscruise_pa) * qcruise_pa * self.cdminclean + (inddragfact / qcruise_pa) * wscruise_pa
+        density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0))
+        
+        ram_drag = (4.44822*13000*mach*density_ratio)
+
+        twratio = (1 / wscruise_pa) * qcruise_pa * self.cdminclean + (inddragfact / qcruise_pa) * wscruise_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
+        
 
         if map2sl:
             twratio = twratio / tcorr
