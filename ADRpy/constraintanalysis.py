@@ -282,7 +282,8 @@ class AircraftConcept:
             'climbalt_m': 0,  # Assign sea level (h = 0 metres)
             'climbspeed_kias': False,  # Flag as not specified
             'climbrate_fpm': False,  # Flag as not specified
-
+            'climbthrustfact': 1.0,
+            
             # Cruise Constraint
             'cruisealt_m': False,  # Flag as not specified
             'cruisespeed_ktas': False,  # Flag as not specified
@@ -432,6 +433,7 @@ class AircraftConcept:
         self.climbalt_m = brief['climbalt_m']
         self.climbspeed_kias = brief['climbspeed_kias']
         self.climbrate_fpm = brief['climbrate_fpm']
+        self.climbthrustfact = brief['climbthrustfact']
 
         # Cruise Constraint
         self.cruisealt_m = brief['cruisealt_m']
@@ -1315,10 +1317,9 @@ class AircraftConcept:
 
         density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m*0.3048)/self.designatm.airdens_kgpm3(0))
         
-        ram_drag = (4.44822*13000*mach*density_ratio)
+        ram_drag = (4.44822*13333*mach*density_ratio)
         
         twratio = (1 / wscruise_pa) * qcruise_pa * self.cdminclean + (inddragfact / qcruise_pa) * wscruise_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
-        print(twratio)
 
         if map2sl:
             twratio = twratio / tcorr
