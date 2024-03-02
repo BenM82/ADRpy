@@ -2176,8 +2176,8 @@ class AircraftConcept:
         x1_infeascl = min(infeas_x_axis)
 
         # GRAPH PLOTTING
-
-        predefinedlabels = {'climb': "Climb hi", 'cruise': "Cruise", 'servceil': "Service ceiling",
+        
+        predefinedlabels = {'climb': "Climb", 'cruise': "Cruise", 'servceil': "Service ceiling",
                             'take-off': "Take-off ground roll", 'turn': "Sustained turn"}
 
         fontsize_title = 1.20 * textsize
