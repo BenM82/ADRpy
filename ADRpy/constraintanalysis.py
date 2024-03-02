@@ -1268,7 +1268,7 @@ class AircraftConcept:
 
         # Map back to T/MTOW if climb start weight is less than MTOW
         twratio = twratio * self.climb_weight_fraction
-
+        twratio = twratio * (1/self.climbthrustfact)
         if len(twratio) == 1:
             return twratio[0]
 
