@@ -1391,7 +1391,7 @@ class AircraftConcept:
         ram_drag = (4.44822*13000*mach*density_ratio)
         
         twratio = climbrate_mpstroc / secclimbspeed_mpstas + (1 / wsservceil_pa) * qservceil_pa * self.cdminclean + (
-                inddragfact / qservceil_pa) * wsservceil_pa + (ram_drag/(self.sec_weight_fraction_weight_fraction * self.weight_n))
+                inddragfact / qservceil_pa) * wsservceil_pa + (ram_drag/(self.sec_weight_fraction * self.weight_n))
 
         if map2sl:
             twratio = twratio / tcorr
