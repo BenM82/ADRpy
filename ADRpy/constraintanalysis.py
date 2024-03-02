@@ -1328,7 +1328,7 @@ class AircraftConcept:
             tcorr = (0.856 + 0.062*self.bpr + (0.16 - 0.23*self.bpr)*mach)*(density_ratio)
         else:
             tcorr = (0.856 + 0.062*self.bpr + (0.16 - 0.23*self.bpr)*mach)*(density_ratio**0.8)
-    
+        
             
         if map2sl:
             twratio = twratio / tcorr
@@ -1585,8 +1585,12 @@ class AircraftConcept:
         qturn = self.designatm.dynamicpressure_pa(airspeed_mps=turnspeed_mpstas, altitudes_m=turnalt_m)
         cl_turn = wsclimb_pa * nturn / qturn
         inddragfact = self.induceddragfact_lesm(wingloading_pa=wingloading_pa, cl_real=cl_turn, mach_inf=mach)
-
-        twreqtrn = qturn * (cdmin / wingloading_pa + inddragfact * ((nturn / qturn) ** 2) * wsclimb_pa)
+        
+        density_ratio = (self.designatm.airdens_kgpm3(self.turnalt_m)/self.designatm.airdens_kgpm3(0))
+        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
+        
+        
+        twreqtrn = (qturn * (cdmin / wingloading_pa + inddragfact * ((nturn / qturn) ** 2) * wsclimb_pa)) + ram_drag/self.weight_n
 
         return twreqtrn, cl_turn
 
