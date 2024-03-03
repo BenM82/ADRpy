@@ -1587,7 +1587,7 @@ class AircraftConcept:
         inddragfact = self.induceddragfact_lesm(wingloading_pa=wingloading_pa, cl_real=cl_turn, mach_inf=mach)
         
         density_ratio = (self.designatm.airdens_kgpm3(self.turnalt_m)/self.designatm.airdens_kgpm3(0))
-        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
+        ram_drag = (4.44822*(-12650*mach - 115)*density_ratio)
         
         
         twreqtrn = (qturn * (cdmin / wingloading_pa + inddragfact * ((nturn / qturn) ** 2) * wsclimb_pa)) + ram_drag/self.weight_n
