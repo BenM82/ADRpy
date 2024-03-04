@@ -283,11 +283,13 @@ class AircraftConcept:
             'climbspeed_kias': False,  # Flag as not specified
             'climbrate_fpm': False,  # Flag as not specified
             'climbthrustfact': 1.0,
+            'ram_drag_factor_climb': 1.0,
             
             # Cruise Constraint
             'cruisealt_m': False,  # Flag as not specified
             'cruisespeed_ktas': False,  # Flag as not specified
             'cruisethrustfact': 1.0,  # Assume 100% throttle in cruise
+            'ram_drag_factor_cruise': 1.0,
 
             # Service Ceiling Constraint
             'servceil_m': False,  # Flag as not specified
@@ -305,12 +307,15 @@ class AircraftConcept:
             'takeoffnozzleangle': 0,
             'to_headwind_kts': 0,
             'to_slope_perc': 0,
+            'ram_drag_factor_to': 1.0,
 
             # Turn Constraint
             'stloadfactor': False,  # Flag as not specified
             'turnalt_m': 0,  # Assign sea level (h = 0 metres)
             'turnspeed_ktas': False,  # Flag as not specified
+            'ram_drag_factor_turn': 1.0,
         }
+        
 
         # Specify the default flags or parameters for the design definition, if parameter is left unspecified
 
@@ -429,17 +434,23 @@ class AircraftConcept:
 
         # Package all parameters, specified and unspecified, into a library of nominal design values
         self.designstate = [brief, design, performance]
+        
 
+        
         # Climb Constraint
         self.climbalt_m = brief['climbalt_m']
         self.climbspeed_kias = brief['climbspeed_kias']
         self.climbrate_fpm = brief['climbrate_fpm']
         self.climbthrustfact = brief['climbthrustfact']
-
+        self.ram_drag_factor_climb = brief['ram_drag_factor_climb']
+        
+        
         # Cruise Constraint
         self.cruisealt_m = brief['cruisealt_m']
         self.cruisespeed_ktas = brief['cruisespeed_ktas']
         self.cruisethrustfact = brief['cruisethrustfact']
+        self.ram_drag_factor_cruise = brief['ram_drag_factor_cruise']
+        
 
         # Service Ceiling Constraint
         self.servceil_m = brief['servceil_m']
@@ -461,11 +472,13 @@ class AircraftConcept:
         self.to_slope_deg = math.degrees(self.to_slope_rad)
         self.takeoffnozzleangle_rad = math.radians(self.takeoffnozzleangle_deg)
         self.groundrunnozzleangle_rad = math.radians(self.groundrunnozzleangle_deg)
+        self.ram_drag_factor_to = brief['ram_drag_factor_to']
 
         # Turn Constraint
         self.turnalt_m = brief['turnalt_m']
         self.turnspeed_ktas = brief['turnspeed_ktas']
         self.stloadfactor = brief['stloadfactor']
+        self.ram_drag_factor_turn = brief['ram_drag_factor_turn']
 
         # Aircraft Geometry
         self.aspectratio = design['aspectratio']
@@ -1258,7 +1271,7 @@ class AircraftConcept:
         
         density_ratio = (self.designatm.airdens_kgpm3(self.climbalt_m)/self.designatm.airdens_kgpm3(0))
         
-        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
+        ram_drag = self.ram_drag_factor_climb*(4.44822*(7000*mach + 300)*density_ratio)
         
         
         twratio = accel_fact * climbrate_mpstroc / climbspeed_mpstas + (
@@ -1319,7 +1332,7 @@ class AircraftConcept:
 
         density_ratio = (self.designatm.airdens_kgpm3(self.cruisealt_m)/self.designatm.airdens_kgpm3(0))
         
-        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
+        ram_drag = self.ram_drag_factor_cruise*(4.44822*(7000*mach + 300)*density_ratio)
         
         twratio = (1 / wscruise_pa) * qcruise_pa * self.cdminclean + (inddragfact / qcruise_pa) * wscruise_pa + (ram_drag/(self.cruise_weight_fraction * self.weight_n))
 
@@ -1458,7 +1471,7 @@ class AircraftConcept:
         
 
 
-        ram_drag = 1080*4.44822  #Estimated for M = 1, which is approximate average ram drag over a take-off run.
+        ram_drag = self.ram_drag_factor_to*(1080*4.44822)  #Estimated for M = 1, which is approximate average ram drag over a take-off run.
 
 
 
@@ -1587,7 +1600,7 @@ class AircraftConcept:
         inddragfact = self.induceddragfact_lesm(wingloading_pa=wingloading_pa, cl_real=cl_turn, mach_inf=mach)
         
         density_ratio = (self.designatm.airdens_kgpm3(self.turnalt_m)/self.designatm.airdens_kgpm3(0))
-        ram_drag = (4.44822*(7000*mach + 300)*density_ratio)
+        ram_drag = self.ram_drag_factor_turn*(4.44822*(7000*mach + 300)*density_ratio)
         
         
         twreqtrn = (qturn * (cdmin / wingloading_pa + inddragfact * ((nturn / qturn) ** 2) * wsclimb_pa)) + ram_drag/self.weight_n
