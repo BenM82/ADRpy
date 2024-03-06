@@ -2361,10 +2361,9 @@ class AircraftConcept:
                 # fig.suptitle("Combined View of Propulsion System Requirements", size=suptitle['size'])
                 combinedplot(ax_comb=ax)
 
-        if show:
-            ax.scatter(18.683, (21500*9.81*0.453592)/self.weight_n, s=350, marker="*")
-            plt.show()
-            plt.close(fig=fig)
+        #if show:
+            #plt.show()
+            #plt.close(fig=fig)
 
         return None
 
