@@ -2363,6 +2363,7 @@ class AircraftConcept:
 
         if show:
             plt.show()
+            plt.markers("*")
             plt.close(fig=fig)
 
         return None
