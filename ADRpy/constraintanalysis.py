@@ -2363,7 +2363,7 @@ class AircraftConcept:
 
         if show:
             plt.show()
-            plt.markers(18.683, 21500/self.weight_n,"*")
+            plt.scatter(18.683, 21500/self.weight_n,"*")
             plt.close(fig=fig)
 
         return None
