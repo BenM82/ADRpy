@@ -2345,7 +2345,7 @@ class AircraftConcept:
                 sensitivityplots(whichconstraint=sensitivityplottype, ax_sens=axs_dict[sensitivityplottype])
             # Plot COMBINED constraint diagram
             combinedplot(ax_comb=axs_dict['combined'])
-
+                
         elif show in plots_list:
             # Plotting setup, single window
             fig, ax = plt.subplots(1, 1, figsize=figsize_in,
@@ -2363,7 +2363,7 @@ class AircraftConcept:
 
         if show:
             plt.show()
-            plt.scatter(18.683, 21500/self.weight_n, s=100, marker="*")
+            ax.scatter(18.683, (21500*9.81*0.453592)/self.weight_n, s=100, marker="*")
             plt.close(fig=fig)
 
         return None
