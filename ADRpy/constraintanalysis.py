@@ -2362,7 +2362,7 @@ class AircraftConcept:
                 combinedplot(ax_comb=ax)
 
         if show:
-            ax.scatter(18.683, (21500*9.81*0.453592)/self.weight_n, s=100, marker="*")
+            ax.scatter(18.683, (21500*9.81*0.453592)/self.weight_n, s=350, marker="*")
             plt.show()
             plt.close(fig=fig)
 
